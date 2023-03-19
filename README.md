@@ -1,0 +1,2 @@
+# ex_JS
+JavaScript, NodeJS, React.js 를 공부하는 공간입니다.
