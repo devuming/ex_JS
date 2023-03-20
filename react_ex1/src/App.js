@@ -1,14 +1,22 @@
 import './App.css';
+import MyHeader from './MyHeader';
+import Counter from './Counter';
+import Container from './Container';
 
 function App() {
-  let name = "유미닝";
+  const counterProps = {
+    a:1,
+    b:2,
+    c:3,
+    d:4,
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <h2>{name}</h2>
-        <h3>HI React</h3>
-      </header>
-    </div>
+    <Container>
+      <div>  
+        <MyHeader />
+        <Counter {...counterProps} />
+      </div>
+    </Container>
   );
 }
 
