@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 const DiaryEditor = ()=>{
+    // React.MutableRefObject를 반환 : 접근할 수 있는 DOM 요소를 반환
+    // authorInput 객체로 name이 author인 input 태그에 접근할 수 있음
+    const authorInput = useRef();
+    const contentInput = useRef();
+
     const [state, setState] = useState({
         author:"",
         content:"",
@@ -13,18 +18,36 @@ const DiaryEditor = ()=>{
         });
     };
     const handleSubmit = ()=>{
-        console.log(state);
-        alert("저장 성공");
+        if (state.author.length < 1){
+            alert("작성자는 최소 1글자 이상 입력해주세요");
+            authorInput.current.focus();
+            return;
+        }
+
+        if (state.content.length < 5){
+            alert("본문은 최소 5글자 이상 입력해주세요");
+            contentInput.current.focus();
+            return;
+        }
+
+        alert("저장 성공!");
     };
     
     return (
         <div className="DiaryEditor">
             <h2>오늘의 일기</h2>
             <div>
-                <input name="author" value={state.author} onChange={handleChangeState}/>
+                <input ref={authorInput}
+                name="author" 
+                value={state.author} 
+                onChange={handleChangeState}/>
             </div>
             <div>
-                <textarea name="content" value={state.content} onChange={handleChangeState}/>
+                <textarea 
+                ref={contentInput}
+                name="content" 
+                value={state.content} 
+                onChange={handleChangeState}/>
             </div>
             <div>오늘의 감정점수 : 
                 <select
