@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-const DiaryEditor = ()=>{
+const DiaryEditor = ({onCreate})=>{
     // React.MutableRefObject를 반환 : 접근할 수 있는 DOM 요소를 반환
     // authorInput 객체로 name이 author인 input 태그에 접근할 수 있음
     const authorInput = useRef();
@@ -30,7 +30,15 @@ const DiaryEditor = ()=>{
             return;
         }
 
+        // Props로 받은 onCreate함수를 호출하여 부모요소의 상태함수 호출
+        onCreate(state.author, state.content, state.emotion);
         alert("저장 성공!");
+        // 입력값 초기화 (State 비워줌)
+        setState({
+            author:"",
+            content:"",
+            emotion:1,
+        });
     };
     
     return (
