@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
@@ -13,16 +13,17 @@ function App() {
       "https://jsonplaceholder.typicode.com/comments"
     ).then((res) => res.json());
 
-    // API에서 받아온 데이터로 초기 바인딩 데이터 생성
+    // API에서 받아온 데이터로 초기 바인딩 데이터 생성 : API 값을 일기 데이터 구조로 변환
     const initData = res.slice(0, 20).map((it) => {
+      // 500개 배열에서 20개만 slice
       return {
         author: it.email,
         content: it.body,
         emotion: Math.floor(Math.random() * 5) + 1, // 1~5까지의 난수 생성 & 정수로 변환
         created_date: new Date().getTime(),
         id: dataId.current++, // dataId.current값을 id에 넣고 id 증가 시키기
-      }; // 배열의 객체 요소들을 API 값을 일기 데이터 구조로 변환
-    }); // 500개 배열에서 20개만 slice
+      };
+    });
 
     setData(initData);
   }; // Promise를 반환하는 비동기 함수
@@ -62,9 +63,24 @@ function App() {
     alert(`${targetId}가 수정되었습니다.`);
   };
 
+  const getDiaryAnalysis = useMemo(() => {
+    console.log("일기 분석 시작");
+
+    const goodCount = data.filter((it) => it.emotion >= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / badCount) * 100;
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+
   return (
     <div className="App">
       <DiaryEditor onCreate={onCreate} />
+      <div>전체 일기 : {data.length}</div>
+      <div>기분 좋은 일기 : {goodCount}</div>
+      <div>기분 나쁜 일기 : {badCount}</div>
+      <div>기분 좋은 비율 : {goodRatio}</div>
       <DiaryList diaryList={data} onEdit={onEdit} onRemove={onRemove} />
     </div>
   );
