@@ -1,78 +1,81 @@
-import { useState, useRef } from "react";
-const DiaryEditor = ({onCreate})=>{
-    // React.MutableRefObject를 반환 : 접근할 수 있는 DOM 요소를 반환
-    // authorInput 객체로 name이 author인 input 태그에 접근할 수 있음
-    const authorInput = useRef();
-    const contentInput = useRef();
+import React, { useState, useRef } from "react";
+const DiaryEditor = ({ onCreate }) => {
+  const authorInput = useRef();
+  const contentInput = useRef();
 
-    const [state, setState] = useState({
-        author:"",
-        content:"",
-        emotion:1,
-    })
+  const [state, setState] = useState({
+    author: "",
+    content: "",
+    emotion: 1,
+  });
 
-    const handleChangeState = (e) =>{
-        setState({
-            ...state,
-            [e.target.name] : e.target.value,
-        });
-    };
-    const handleSubmit = ()=>{
-        if (state.author.length < 1){
-            alert("작성자는 최소 1글자 이상 입력해주세요");
-            authorInput.current.focus();
-            return;
-        }
+  const handleChangeState = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleSubmit = () => {
+    if (state.author.length < 1) {
+      alert("작성자는 최소 1글자 이상 입력해주세요");
+      authorInput.current.focus();
+      return;
+    }
 
-        if (state.content.length < 5){
-            alert("본문은 최소 5글자 이상 입력해주세요");
-            contentInput.current.focus();
-            return;
-        }
+    if (state.content.length < 5) {
+      alert("본문은 최소 5글자 이상 입력해주세요");
+      contentInput.current.focus();
+      return;
+    }
 
-        // Props로 받은 onCreate함수를 호출하여 부모요소의 상태함수 호출
-        onCreate(state.author, state.content, state.emotion);
-        alert("저장 성공!");
-        // 입력값 초기화 (State 비워줌)
-        setState({
-            author:"",
-            content:"",
-            emotion:1,
-        });
-    };
-    
-    return (
-        <div className="DiaryEditor">
-            <h2>오늘의 일기</h2>
-            <div>
-                <input ref={authorInput}
-                name="author" 
-                value={state.author} 
-                onChange={handleChangeState}/>
-            </div>
-            <div>
-                <textarea 
-                ref={contentInput}
-                name="content" 
-                value={state.content} 
-                onChange={handleChangeState}/>
-            </div>
-            <div>오늘의 감정점수 : 
-                <select
-                    name="emotion" 
-                    value={state.emotion}
-                    onChange={handleChangeState}>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                </select>
-            </div>
-            <div>
-                <button onClick={handleSubmit}>일기 저장하기</button>
-            </div>
-        </div>
-    );
-}
-export default DiaryEditor;
+    // Props로 받은 onCreate함수를 호출하여 부모요소의 상태함수 호출
+    onCreate(state.author, state.content, state.emotion);
+    alert("저장 성공!");
+    // 입력값 초기화 (State 비워줌)
+    setState({
+      author: "",
+      content: "",
+      emotion: 1,
+    });
+  };
+
+  return (
+    <div className="DiaryEditor">
+      <h2>오늘의 일기</h2>
+      <div>
+        <input
+          ref={authorInput}
+          name="author"
+          value={state.author}
+          onChange={handleChangeState}
+        />
+      </div>
+      <div>
+        <textarea
+          ref={contentInput}
+          name="content"
+          value={state.content}
+          onChange={handleChangeState}
+        />
+      </div>
+      <div>
+        오늘의 감정점수 :
+        <select
+          name="emotion"
+          value={state.emotion}
+          onChange={handleChangeState}
+        >
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+          <option value={4}>4</option>
+          <option value={5}>5</option>
+        </select>
+      </div>
+      <div>
+        <button onClick={handleSubmit}>일기 저장하기</button>
+      </div>
+    </div>
+  );
+};
+export default React.memo(DiaryEditor);
